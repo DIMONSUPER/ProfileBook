@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="ProfileBook.Views.SignUpPage"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="CenterAndExpand"
+                     Margin="30,0,30,0">
+
+            <Entry Placeholder="Login"
+                   Text="{Binding  UserLogin}"/>
+
+            <Entry Placeholder="Password"
+                   IsPassword="True"
+                   Text="{Binding UserPassword, Mode=TwoWay}"/>
+
+            <Entry Placeholder="Confirm Password"
+                   IsPassword="True"
+                   Text="{Binding ConfirmUserPassword, Mode=TwoWay}"/>
+
+            <Button Text="Sign Up"
+                    BackgroundColor="#ff901b"
+                    BorderColor="Black"
+                    BorderWidth="1"
+                    IsEnabled="{Binding IsButtonEnabled,Mode=TwoWay}"
+                    Command="{Binding SignUpClickCommand}"/>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
