@@ -3,9 +3,8 @@ using SQLite;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace ProfileBook.Service
+namespace ProfileBook.Services
 {
     public class RepositoryService : IRepositoryService
     {
