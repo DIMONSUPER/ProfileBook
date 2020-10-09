@@ -1,33 +1,55 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
+﻿using Acr.UserDialogs;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
 using Prism.Navigation;
 using ProfileBook.Models;
-using ProfileBook.Services;
-using SQLite;
+using ProfileBook.Services.ProfileRepository;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 
 namespace ProfileBook.ViewModels
 {
     public class AddEditProfilePageViewModel : ViewModelBase
     {
         public ICommand SaveClickCommand => new Command(SaveClick);
+        public ICommand ImageClickCommand => new Command(ImageClick);
 
-        private IRepositoryService RepositoryService { get; }
+        private IProfileRepositoryService ProfileRepositoryService { get; }
         public AddEditProfilePageViewModel(INavigationService navigationService,
-            IRepositoryService repositoryService)
+            IProfileRepositoryService profileRepositoryService)
             : base(navigationService)
         {
             Title = "Add Profile";
-            RepositoryService = repositoryService;
-            IsButtonEnabled = false;
+            ProfileRepositoryService = profileRepositoryService;
             ProfileImage = "pic_profile.png";
+            IsButtonEnabled = true;
         }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            if (parameters.TryGetValue(nameof(UserId), out int userId))
+            {
+                UserId = userId;
+            }
+            else if (parameters.TryGetValue("DateLabel", out DateTime dateLabel))
+            {
+                var myprofile = ProfileRepositoryService.GetItems().FirstOrDefault(p => p.DateLabel.Equals(dateLabel));
+
+                ProfileImage = myprofile.ProfileImage;
+                NickName = myprofile.NickNameLabel;
+                Name = myprofile.NameLabel;
+                Description = myprofile.Description;
+                UserId = myprofile.UserId;
+                ProfileId = myprofile.Id;
+                DateLabel = myprofile.DateLabel;
+            }
+        }
+
+        public int UserId { get; set; }
+        public int ProfileId { get; set; }
+        public DateTime DateLabel { get; set; }
 
         private bool isButtonEnabled;
         public bool IsButtonEnabled
@@ -72,22 +94,73 @@ namespace ProfileBook.ViewModels
             set { SetProperty(ref description, value); }
         }
 
+        private void ImageClick()
+        {
+            UserDialogs.Instance.ActionSheet(new ActionSheetConfig()
+                                             .SetTitle("Choose picture from")
+                                             .Add("Camera", ChooseFromCamera, "ic_camera_alt.png")
+                                             .Add("Gallery", ChooseFromGallery, "ic_collections.png"));
+        }
+
+        private async void ChooseFromCamera()
+        {
+            try
+            {
+                if (CrossMedia.Current.IsPickPhotoSupported)
+                {
+                    MediaFile photo = await CrossMedia.Current.PickPhotoAsync();
+                    ProfileImage = photo.Path;
+                }
+            }
+            catch
+            { }
+        }
+
+        private async void ChooseFromGallery()
+        {
+            try
+            {
+                if (CrossMedia.Current.IsCameraAvailable && CrossMedia.Current.IsTakePhotoSupported)
+                {
+                    MediaFile file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+                    {
+                        SaveToAlbum = true,
+                        Directory = "Sample",
+                        Name = $"{DateTime.Now:dd.MM.yyyy_hh.mm.ss}.jpg"
+                    });
+
+                    if (file == null)
+                        return;
+
+                    ProfileImage = file.Path;
+                }
+            }
+            catch
+            { }
+        }
+
         private async void SaveClick()
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var database = new SQLiteConnection(Path.Combine(path, "Profiles.db"));
-            database.CreateTable<ProfileModel>();
+            if (DateLabel == new DateTime())
+                DateLabel = DateTime.Now;
 
-            var myquery = database.Insert(new ProfileModel
+            int result = ProfileRepositoryService.SaveItem(new ProfileModel
             {
-                DateLabel = DateTime.Now,
+                Id = ProfileId,
                 NameLabel = Name,
+                DateLabel = DateLabel,
                 NickNameLabel = NickName,
-                ProfileImage = ProfileImage
+                ProfileImage = profileImage,
+                Description = Description,
+                UserId = UserId
             });
 
-            await NavigationService.GoBackAsync();
-
+            if (result != -1)
+            {
+                var parameters = new NavigationParameters();
+                parameters.Add("Id", UserId);
+                await NavigationService.GoBackAsync(parameters);
+            }
         }
 
         private void SwitchButtonEnabled()

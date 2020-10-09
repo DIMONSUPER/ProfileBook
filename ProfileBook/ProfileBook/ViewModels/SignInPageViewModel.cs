@@ -1,6 +1,7 @@
 ﻿using Prism.Navigation;
 using Prism.Services;
-using ProfileBook.Services;
+using ProfileBook.Helpers;
+using ProfileBook.Services.UserRepository;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -12,19 +13,21 @@ namespace ProfileBook.ViewModels
         public ICommand LabelClickCommand => new Command(LabelClick);
         public ICommand SignInClickCommand => new Command(SignInClick);
 
-        private IRepositoryService RepositoryService { get; }
+        private IUserRepositoryService UserRepositoryService { get; }
         private IPageDialogService PageDialogService { get; }
         public SignInPageViewModel(INavigationService navigationService,
-            IRepositoryService repositoryService,
+            IUserRepositoryService userRepositoryService,
             IPageDialogService pageDialogService)
             : base(navigationService)
         {
             Title = "Users SignIn";
-            RepositoryService = repositoryService;
+            UserRepositoryService = userRepositoryService;
             PageDialogService = pageDialogService;
-            IsButtonEnabled = false;
-            UserLogin = "dima";
-            UserPassword = "Q1W2E3r4t5y6";
+
+            if (!string.IsNullOrEmpty(Settings.RememberedLogin))
+            {
+                UserLogin = Settings.RememberedLogin;
+            }
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -49,6 +52,7 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref userLogin, value);
+                
                 SwitchButtonEnabled();
             }
         }
@@ -71,15 +75,21 @@ namespace ProfileBook.ViewModels
 
         private async void SignInClick()
         {
-            var myquery = RepositoryService.GetItems().FirstOrDefault(u => u.Name.Equals(UserLogin) && u.Password.Equals(UserPassword));
+            var myquery = UserRepositoryService.GetItems().FirstOrDefault(u => u.Name.Equals(UserLogin) && u.Password.Equals(UserPassword));
 
             if (myquery != null)
             {
-                await NavigationService.NavigateAsync("/NavigationPage/MainPage");
+                Settings.RememberedLogin = UserLogin;
+
+                var parameters = new NavigationParameters();
+                parameters.Add(nameof(myquery.Id), myquery.Id);
+
+                await NavigationService.NavigateAsync("/NavigationPage/MainListPage", parameters);
             }
             else
             {
                 await PageDialogService.DisplayAlertAsync("Invalid login or password!", "Invalid login or password!", "OK");
+                Settings.RememberedLogin = string.Empty;
                 UserPassword = string.Empty;
             }
         }

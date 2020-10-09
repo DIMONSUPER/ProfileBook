@@ -3,7 +3,9 @@ using Prism.Ioc;
 using ProfileBook.ViewModels;
 using ProfileBook.Views;
 using Xamarin.Forms;
-using ProfileBook.Services;
+using ProfileBook.Services.ProfileRepository;
+using ProfileBook.Services.UserRepository;
+using ProfileBook.Helpers;
 
 namespace ProfileBook
 {
@@ -17,16 +19,23 @@ namespace ProfileBook
         protected override async void OnInitialized()
         {
             InitializeComponent();
-
-            await NavigationService.NavigateAsync("NavigationPage/SignInPage");
+            if (!string.IsNullOrEmpty(Settings.RememberedLogin))
+            {
+                await NavigationService.NavigateAsync("NavigationPage/MainListPage");
+            }
+            else
+            {
+                await NavigationService.NavigateAsync("NavigationPage/SignInPage");
+            }
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterInstance<IRepositoryService>(Container.Resolve<RepositoryService>());
+            containerRegistry.RegisterInstance<IUserRepositoryService>(Container.Resolve<UserRepositoryService>());
+            containerRegistry.RegisterInstance<IProfileRepositoryService>(Container.Resolve<ProfileRepositoryService>());
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<MainListPage, MainListViewModel>();
             containerRegistry.RegisterForNavigation<SignInPage, SignInPageViewModel>();
             containerRegistry.RegisterForNavigation<SignUpPage, SignUpPageViewModel>();
             containerRegistry.RegisterForNavigation<AddEditProfilePage, AddEditProfilePageViewModel>();

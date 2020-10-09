@@ -16,14 +16,20 @@
     <ContentPage.Content>
         <StackLayout Spacing="30"
                      Padding="30,30">
-            <Image Source="{Binding ProfileImage}"
-                   HeightRequest="150"
-                   WidthRequest="150"/>
-            <Entry Placeholder="NickName"/>
-            <Entry Placeholder="Name"/>
+            <ImageButton Source="{Binding ProfileImage}"
+                         Command="{Binding ImageClickCommand}"
+                         BackgroundColor="Transparent"
+                         HeightRequest="150"
+                         WidthRequest="150"/>
+            <Entry Placeholder="NickName"
+                   Text="{Binding NickName}"/>
+            <Entry Placeholder="Name"
+                   Text="{Binding Name}"/>
             <Editor Placeholder="Description"
+                    Text="{Binding Description}"
                     BackgroundColor="#D4D4D4"
-                    VerticalOptions="FillAndExpand"/>
+                    VerticalOptions="FillAndExpand"
+                    MaxLength="120"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

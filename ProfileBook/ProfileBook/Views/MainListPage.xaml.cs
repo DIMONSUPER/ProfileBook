@@ -1,8 +1,8 @@
 ﻿namespace ProfileBook.Views
 {
-    public partial class MainPage
+    public partial class MainListPage
     {
-        public MainPage()
+        public MainListPage()
         {
             InitializeComponent();
         }
