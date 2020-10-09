@@ -4,35 +4,35 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ProfileBook.Services
+namespace ProfileBook.Services.ProfileRepository
 {
-    public class RepositoryService : IRepositoryService
+    public class ProfileRepositoryService : IProfileRepositoryService
     {
         private readonly SQLiteConnection database;
 
-        public RepositoryService()
+        public ProfileRepositoryService()
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            database = new SQLiteConnection(Path.Combine(path, "Users.db"));
-            database.CreateTable<UserModel>();
+            database = new SQLiteConnection(Path.Combine(path, "profiles_database.db"));
+            database.CreateTable<ProfileModel>();
         }
 
-        public IEnumerable<UserModel> GetItems()
+        public IEnumerable<ProfileModel> GetItems()
         {
-            return database.Table<UserModel>().ToList();
+            return database.Table<ProfileModel>().ToList();
         }
 
-        public UserModel GetItem(int id)
+        public ProfileModel GetItem(int id)
         {
-            return database.Get<UserModel>(id);
+            return database.Get<ProfileModel>(id);
         }
 
         public int DeleteItem(int id)
         {
-            return database.Delete<UserModel>(id);
+            return database.Delete<ProfileModel>(id);
         }
 
-        public int SaveItem(UserModel item)
+        public int SaveItem(ProfileModel item)
         {
             int result = -1;
             try

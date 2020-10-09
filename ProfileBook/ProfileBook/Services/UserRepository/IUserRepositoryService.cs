@@ -1,9 +1,9 @@
 ﻿using ProfileBook.Models;
 using System.Collections.Generic;
 
-namespace ProfileBook.Services
+namespace ProfileBook.Services.UserRepository
 {
-    public interface IRepositoryService
+    public interface IUserRepositoryService
     {
         IEnumerable<UserModel> GetItems();
         UserModel GetItem(int id);
