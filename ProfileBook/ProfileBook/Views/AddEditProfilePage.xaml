@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="ProfileBook.Views.AddEditProfilePage"
+             Title="{Binding Title}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding SaveClickCommand}"
+                     IsEnabled="{Binding IsButtonEnabled}"
+                     Text = "Save"
+                     IconImageSource="ic_save.png"
+                     Order = "Primary"/>
+    </ContentPage.ToolbarItems>
+    
+    <ContentPage.Content>
+        <StackLayout Spacing="30"
+                     Padding="30,30">
+            <Image Source="{Binding ProfileImage}"
+                   HeightRequest="150"
+                   WidthRequest="150"/>
+            <Entry Placeholder="NickName"/>
+            <Entry Placeholder="Name"/>
+            <Editor Placeholder="Description"
+                    BackgroundColor="#D4D4D4"
+                    VerticalOptions="FillAndExpand"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
