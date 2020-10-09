@@ -6,26 +6,32 @@
              x:Class="ProfileBook.Views.SignUpPage"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="CenterAndExpand"
-                     Margin="30,0,30,0">
+        <StackLayout VerticalOptions="FillAndExpand"
+                     HorizontalOptions="FillAndExpand"
+                     Padding="30,0"
+                     Spacing="0">
 
-            <Entry Placeholder="Login"
-                   Text="{Binding  UserLogin}"/>
+            <StackLayout VerticalOptions="CenterAndExpand">
+                <Entry Placeholder="Login"
+                       Text="{Binding UserLogin}"/>
 
-            <Entry Placeholder="Password"
-                   IsPassword="True"
-                   Text="{Binding UserPassword, Mode=TwoWay}"/>
+                <Entry Placeholder="Password"
+                       IsPassword="True"
+                       Text="{Binding UserPassword}"/>
 
-            <Entry Placeholder="Confirm Password"
-                   IsPassword="True"
-                   Text="{Binding ConfirmUserPassword, Mode=TwoWay}"/>
+                <Entry Placeholder="Confirm Password"
+                       IsPassword="True"
+                       Text="{Binding ConfirmUserPassword}"/>
+            </StackLayout>
 
             <Button Text="Sign Up"
+                    VerticalOptions="End"
+                    Margin="0,0,0,80"
                     BackgroundColor="#ff901b"
                     BorderColor="Black"
                     BorderWidth="1"
-                    IsEnabled="{Binding IsButtonEnabled,Mode=TwoWay}"
-                    Command="{Binding SignUpClickCommand}"/>
+                    Command="{Binding SignUpClickCommand}"
+                    IsEnabled="{Binding IsButtonEnabled}"/>
 
         </StackLayout>
     </ContentPage.Content>

@@ -4,8 +4,76 @@
              x:Class="ProfileBook.Views.MainPage"
              Title="{Binding Title}">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Welcome to Xamarin Forms and Prism!" />
-    </StackLayout>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding LogOutClickCommand}" 
+                     Text = "Log out"
+                     IconImageSource="ic_exit_to_app.png"
+                     Order = "Primary"/>
+
+        <ToolbarItem Command="{Binding SettingsClickCommand}" 
+                     Text = "Settings"
+                     IconImageSource="ic_settings.png"
+                     Order = "Primary" />
+
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <CollectionView ItemsSource="{Binding ProfileList}"
+                            EmptyView="No profiles added">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.RowSpan="3"
+                                   Source="{Binding ProfileImage}"
+                                   Aspect="AspectFill"
+                                   HeightRequest="60"
+                                   WidthRequest="60" />
+
+                            <Label Grid.Column="1"
+                                   Text="{Binding NickNameLabel}"
+                                   FontAttributes="Bold" />
+
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   Text="{Binding NameLabel}"
+                                   FontAttributes="Italic"
+                                   VerticalOptions="Center" />
+
+                            <Label Grid.Row="2"
+                                   Grid.Column="1"
+                                   Text="{Binding DateLabel}"
+                                   FontAttributes="Italic"
+                                   VerticalOptions="End" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <ImageButton Source="ic_add.png" 
+                         BackgroundColor="Blue"
+                         CornerRadius="100"
+                         BorderWidth="10"
+                         Scale="0.8"
+                         Padding="30"
+                         BorderColor="Black"
+                         AbsoluteLayout.LayoutFlags="PositionProportional"  
+                         AbsoluteLayout.LayoutBounds=".95,.95,80,80"/>
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
 
 </ContentPage>

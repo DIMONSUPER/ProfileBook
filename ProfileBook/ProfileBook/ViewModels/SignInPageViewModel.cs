@@ -1,10 +1,6 @@
-﻿using Acr.UserDialogs;
-using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Navigation;
-using ProfileBook.Service;
-using System;
-using System.Collections.Generic;
+﻿using Prism.Navigation;
+using Prism.Services;
+using ProfileBook.Services;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -14,21 +10,21 @@ namespace ProfileBook.ViewModels
     public class SignInPageViewModel : ViewModelBase
     {
         public ICommand LabelClickCommand => new Command(LabelClick);
-
         public ICommand SignInClickCommand => new Command(SignInClick);
 
         private IRepositoryService RepositoryService { get; }
-        public SignInPageViewModel(IRepositoryService repositoryService,
-            INavigationService navigationService)
+        private IPageDialogService PageDialogService { get; }
+        public SignInPageViewModel(INavigationService navigationService,
+            IRepositoryService repositoryService,
+            IPageDialogService pageDialogService)
             : base(navigationService)
         {
             Title = "Users SignIn";
             RepositoryService = repositoryService;
-        }
-
-        public override void Initialize(INavigationParameters parameters)
-        {
+            PageDialogService = pageDialogService;
             IsButtonEnabled = false;
+            UserLogin = "dima";
+            UserPassword = "Q1W2E3r4t5y6";
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -53,7 +49,6 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref userLogin, value);
-
                 SwitchButtonEnabled();
             }
         }
@@ -65,7 +60,6 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref userPassword, value);
-
                 SwitchButtonEnabled();
             }
         }
@@ -77,29 +71,22 @@ namespace ProfileBook.ViewModels
 
         private async void SignInClick()
         {
-            var myquery = RepositoryService.GetItems().Where(u => u.Name.Equals(UserLogin) && u.Password.Equals(UserPassword)).FirstOrDefault();
+            var myquery = RepositoryService.GetItems().FirstOrDefault(u => u.Name.Equals(UserLogin) && u.Password.Equals(UserPassword));
 
             if (myquery != null)
             {
-                await NavigationService.NavigateAsync("MainPage");
+                await NavigationService.NavigateAsync("/NavigationPage/MainPage");
             }
             else
             {
-                UserDialogs.Instance.Alert("Invalid login or password!", "Error", "OK");
+                await PageDialogService.DisplayAlertAsync("Invalid login or password!", "Invalid login or password!", "OK");
                 UserPassword = string.Empty;
             }
         }
 
         private void SwitchButtonEnabled()
         {
-            if (string.IsNullOrEmpty(userLogin) || string.IsNullOrEmpty(userPassword))
-            {
-                IsButtonEnabled = false;
-            }
-            else
-            {
-                IsButtonEnabled = true;
-            }
+            IsButtonEnabled = !string.IsNullOrEmpty(UserLogin) && !string.IsNullOrEmpty(UserPassword);
         }
     }
 }

@@ -5,39 +5,47 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ProfileBook.Views.SignInPage"
              Title="{Binding Title}">
-    
+
     <ContentPage.Content>
-        <StackLayout VerticalOptions="CenterAndExpand"
-                     Margin="30,0,30,0">
+        <StackLayout VerticalOptions="FillAndExpand"
+                     HorizontalOptions="FillAndExpand"
+                     Padding="30,0"
+                     Spacing="0">
+            <StackLayout VerticalOptions="CenterAndExpand">
 
-    <Entry Placeholder="Login"
-                   Text="{Binding UserLogin}"/>
+                <Entry Placeholder="Login"
+                       Text="{Binding UserLogin}"/>
 
-    <Entry Placeholder="Password"
-                   IsPassword="True"
-                   Text="{Binding UserPassword, Mode=TwoWay}"/>
+                <Entry Placeholder="Password"
+                       IsPassword="True"
+                       Text="{Binding UserPassword}"/>
+            </StackLayout>
 
-    <Button Text="Sign in"
+            <Button Text="Sign in"
+                    VerticalOptions="End"
+                    Margin="0,0,0,20"
                     BackgroundColor="#ff901b"
                     BorderColor="Black"
                     BorderWidth="1"
-                    IsEnabled="{Binding IsButtonEnabled,Mode=TwoWay}"
-                    Command="{Binding SignInClickCommand}"/>
+                    Command="{Binding SignInClickCommand}"
+                    IsEnabled="{Binding IsButtonEnabled}"/>
 
-    <Label HorizontalOptions="CenterAndExpand">
-        <Label.FormattedText>
-            <FormattedString>
-                <Span Text="SIGN UP"
-                              TextColor="Blue"
-                              TextDecorations="Underline">
-                    <Span.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding LabelClickCommand}"/>
-                    </Span.GestureRecognizers>
-                </Span>
-            </FormattedString>
-        </Label.FormattedText>
-    </Label>
+            <Label VerticalOptions="End"
+                   Margin="0,0,0,50"
+                   HorizontalOptions="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="SIGN UP"
+                      TextColor="Blue"
+                      TextDecorations="Underline">
+                            <Span.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LabelClickCommand}"/>
+                            </Span.GestureRecognizers>
+                        </Span>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
 
-    </StackLayout>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

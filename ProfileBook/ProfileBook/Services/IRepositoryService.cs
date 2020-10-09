@@ -1,9 +1,7 @@
 ﻿using ProfileBook.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace ProfileBook.Service
+namespace ProfileBook.Services
 {
     public interface IRepositoryService
     {

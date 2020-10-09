@@ -2,11 +2,8 @@ using Prism;
 using Prism.Ioc;
 using ProfileBook.ViewModels;
 using ProfileBook.Views;
-using Xamarin.Essentials.Interfaces;
-using Xamarin.Essentials.Implementation;
 using Xamarin.Forms;
-using Acr.UserDialogs;
-using ProfileBook.Service;
+using ProfileBook.Services;
 
 namespace ProfileBook
 {
@@ -26,8 +23,6 @@ namespace ProfileBook
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //containerRegistry.RegisterInstance(UserDialogs.Instance);
-
             containerRegistry.RegisterInstance<IRepositoryService>(Container.Resolve<RepositoryService>());
 
             containerRegistry.RegisterForNavigation<NavigationPage>();

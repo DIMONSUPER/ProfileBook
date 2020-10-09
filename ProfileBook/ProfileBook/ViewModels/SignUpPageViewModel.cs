@@ -1,12 +1,7 @@
-﻿using Acr.UserDialogs;
-using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Navigation;
+﻿using Prism.Navigation;
+using Prism.Services;
 using ProfileBook.Models;
-using ProfileBook.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using ProfileBook.Services;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -18,17 +13,15 @@ namespace ProfileBook.ViewModels
         public ICommand SignUpClickCommand => new Command(SignUpClick);
 
         private IRepositoryService RepositoryService { get; }
-        public SignUpPageViewModel(IRepositoryService repositoryService,
-            INavigationService navigationService)
+        private IPageDialogService PageDialogService { get; }
+        public SignUpPageViewModel(INavigationService navigationService,
+            IRepositoryService repositoryService,
+            IPageDialogService pageDialogService)
             : base(navigationService)
         {
             Title = "Users SignUp";
             RepositoryService = repositoryService;
-        }
-
-        public override void Initialize(INavigationParameters parameters)
-        {
-            IsButtonEnabled = false;
+            PageDialogService = pageDialogService;
         }
 
         private bool isButtonEnabled;
@@ -45,7 +38,6 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref userLogin, value);
-
                 SwitchButtonEnabled();
             }
         }
@@ -57,7 +49,6 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref userPassword, value);
-
                 SwitchButtonEnabled();
             }
         }
@@ -69,7 +60,6 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref confirmUserPassword, value);
-
                 SwitchButtonEnabled();
             }
         }
@@ -78,26 +68,34 @@ namespace ProfileBook.ViewModels
         {
             string message = string.Empty;
 
-            if (ValidateLogin(UserLogin, ref message) && ValidatePassword(UserPassword, ConfirmUserPassword, ref message))
+            if (ValidateLogin(UserLogin, ref message))
             {
-                int result = RepositoryService.SaveItem(new UserModel { Name = UserLogin, Password = UserPassword });
-                if (result != -1)
+                if (UserPassword != ConfirmUserPassword)
                 {
-                    UserDialogs.Instance.Alert($"User was successfully registrated", "Registration is successful", "OK");
-
-                    var parameters = new NavigationParameters();
-                    parameters.Add(nameof(UserLogin), UserLogin);
-
-                    await NavigationService.GoBackAsync(parameters);
+                    await PageDialogService.DisplayAlertAsync("Passwords don't match", "Passwords must match!", "OK");
                 }
-                else
+                else if (ValidatePassword(UserPassword, ref message))
                 {
-                    UserDialogs.Instance.Alert($"User with such login already exists", "Registration failed", "OK");
+                    int result = RepositoryService.SaveItem(new UserModel { Name = UserLogin, Password = UserPassword });
+                    if (result != -1)
+                    {
+                        await PageDialogService.DisplayAlertAsync("Registration is successful", "User was successfully registrated", "OK");
+
+                        var parameters = new NavigationParameters();
+                        parameters.Add(nameof(UserLogin), UserLogin);
+
+                        await NavigationService.GoBackAsync(parameters);
+                    }
+                    else
+                    {
+                        await PageDialogService.DisplayAlertAsync("Registration failed", "User with such login already exists", "OK");
+                    }
                 }
             }
-            else if (!string.IsNullOrEmpty(message))
+
+            if (!string.IsNullOrEmpty(message))
             {
-                UserDialogs.Instance.Alert(message, "Password is incorrect", "OK");
+                await PageDialogService.DisplayAlertAsync("Password is incorrect", message, "OK");
             }
         }
 
@@ -124,17 +122,9 @@ namespace ProfileBook.ViewModels
             return result;
         }
 
-        private bool ValidatePassword(string pass, string confpass, ref string message)
+        private bool ValidatePassword(string pass, ref string message)
         {
             bool result = true;
-
-            if (pass != confpass)
-            {
-                UserDialogs.Instance.Alert("Passwords must match!", "Passwords don't match", "OK");
-
-                result = false;
-                return result;
-            }
 
             var hasBeginNotNumber = new Regex(@"^\D");
             if (!hasBeginNotNumber.IsMatch(pass))
@@ -189,15 +179,7 @@ namespace ProfileBook.ViewModels
 
         private void SwitchButtonEnabled()
         {
-            if (string.IsNullOrEmpty(userLogin) || string.IsNullOrEmpty(userPassword) || string.IsNullOrEmpty(ConfirmUserPassword))
-            {
-                IsButtonEnabled = false;
-            }
-            else
-            {
-                IsButtonEnabled = true;
-            }
+            IsButtonEnabled = !string.IsNullOrEmpty(UserLogin) && !string.IsNullOrEmpty(UserPassword) && !string.IsNullOrEmpty(ConfirmUserPassword);
         }
-
     }
 }
