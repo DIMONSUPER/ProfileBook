@@ -106,20 +106,6 @@ namespace ProfileBook.ViewModels
         {
             try
             {
-                if (CrossMedia.Current.IsPickPhotoSupported)
-                {
-                    MediaFile photo = await CrossMedia.Current.PickPhotoAsync();
-                    ProfileImage = photo.Path;
-                }
-            }
-            catch
-            { }
-        }
-
-        private async void ChooseFromGallery()
-        {
-            try
-            {
                 if (CrossMedia.Current.IsCameraAvailable && CrossMedia.Current.IsTakePhotoSupported)
                 {
                     MediaFile file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
@@ -133,6 +119,20 @@ namespace ProfileBook.ViewModels
                         return;
 
                     ProfileImage = file.Path;
+                }
+            }
+            catch
+            { }
+        }
+
+        private async void ChooseFromGallery()
+        {
+            try
+            {
+                if (CrossMedia.Current.IsPickPhotoSupported)
+                {
+                    MediaFile photo = await CrossMedia.Current.PickPhotoAsync();
+                    ProfileImage = photo.Path;
                 }
             }
             catch

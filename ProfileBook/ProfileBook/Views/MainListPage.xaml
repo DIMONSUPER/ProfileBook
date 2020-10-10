@@ -51,11 +51,14 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <Image Grid.RowSpan="3"
-                                               Source="{Binding ProfileImage}"
-                                               Aspect="AspectFill"
-                                               HeightRequest="60"
-                                               WidthRequest="60"/>
+                                        <ImageButton Grid.RowSpan="3"
+                                                     BackgroundColor="Transparent"
+                                                     Command="{Binding BindingContext.ImageClickCommand, Source={x:Reference _this}}"
+                                                     CommandParameter="{Binding .}"
+                                                     Source="{Binding ProfileImage}"
+                                                     Aspect="AspectFill"
+                                                     HeightRequest="60"
+                                                     WidthRequest="60"/>
 
                                         <Label Grid.Column="1"
                                                Text="{Binding NickNameLabel}"

@@ -18,6 +18,7 @@ namespace ProfileBook.ViewModels
         public ICommand EditClickCommand => new Command<ProfileModel>(EditClick);
         public ICommand DeleteClickCommand => new Command<ProfileModel>(DeleteClick);
         public ICommand AddButtonClickCommand => new Command(AddButtonClick);
+        public ICommand ImageClickCommand => new Command<ProfileModel>(ImageClick);
 
         IProfileRepositoryService ProfileRepositoryService { get; }
         IUserRepositoryService UserRepositoryService { get; }
@@ -109,6 +110,14 @@ namespace ProfileBook.ViewModels
                 IsListVisible = false;
                 IsLabelVisible = true;
             }
+        }
+
+        private async void ImageClick(ProfileModel model)
+        {
+            var parameters = new NavigationParameters();
+            parameters.Add(nameof(model.ProfileImage), model.ProfileImage);
+
+            await NavigationService.NavigateAsync("ImagePopupPage", parameters);
         }
 
         private async void DeleteClick(ProfileModel model)

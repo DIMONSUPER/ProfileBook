@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using ProfileBook.Services.ProfileRepository;
 using ProfileBook.Services.UserRepository;
 using ProfileBook.Helpers;
+using Prism.Plugin.Popups;
 
 namespace ProfileBook
 {
@@ -34,12 +35,15 @@ namespace ProfileBook
             containerRegistry.RegisterInstance<IUserRepositoryService>(Container.Resolve<UserRepositoryService>());
             containerRegistry.RegisterInstance<IProfileRepositoryService>(Container.Resolve<ProfileRepositoryService>());
 
+            containerRegistry.RegisterPopupNavigationService();
+
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainListPage, MainListViewModel>();
             containerRegistry.RegisterForNavigation<SignInPage, SignInPageViewModel>();
             containerRegistry.RegisterForNavigation<SignUpPage, SignUpPageViewModel>();
             containerRegistry.RegisterForNavigation<AddEditProfilePage, AddEditProfilePageViewModel>();
             containerRegistry.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
+            containerRegistry.RegisterForNavigation<ImagePopupPage, ImagePopupPageViewModel>();
         }
     }
 }
