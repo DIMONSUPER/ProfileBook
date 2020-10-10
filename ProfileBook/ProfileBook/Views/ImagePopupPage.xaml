@@ -6,11 +6,10 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ProfileBook.Views.ImagePopupPage">
 
-
-
-        <ImageButton Source="{Binding ProfileImage}"
+    <ImageButton Source="{Binding ProfileImage}"
                      BackgroundColor="#60000000"
                      Padding="20"
                      VerticalOptions="FillAndExpand"
                      Command="{Binding ImageClickCommand}"/>
+
 </popups:PopupPage>

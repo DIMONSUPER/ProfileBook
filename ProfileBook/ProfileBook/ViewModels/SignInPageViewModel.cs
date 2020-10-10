@@ -52,7 +52,7 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref userLogin, value);
-                
+
                 SwitchButtonEnabled();
             }
         }

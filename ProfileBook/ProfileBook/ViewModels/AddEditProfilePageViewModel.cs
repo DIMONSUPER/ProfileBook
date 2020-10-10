@@ -1,6 +1,7 @@
 ﻿using Acr.UserDialogs;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using Prism.Commands;
 using Prism.Navigation;
 using ProfileBook.Models;
 using ProfileBook.Services.ProfileRepository;
@@ -13,7 +14,7 @@ namespace ProfileBook.ViewModels
 {
     public class AddEditProfilePageViewModel : ViewModelBase
     {
-        public ICommand SaveClickCommand => new Command(SaveClick);
+        public Command SaveClickCommand => new Command(SaveClick, SwitchButtonEnabled);
         public ICommand ImageClickCommand => new Command(ImageClick);
 
         private IProfileRepositoryService ProfileRepositoryService { get; }
@@ -23,8 +24,6 @@ namespace ProfileBook.ViewModels
         {
             Title = "Add Profile";
             ProfileRepositoryService = profileRepositoryService;
-            ProfileImage = "pic_profile.png";
-            IsButtonEnabled = true;
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -32,6 +31,7 @@ namespace ProfileBook.ViewModels
             if (parameters.TryGetValue(nameof(UserId), out int userId))
             {
                 UserId = userId;
+                ProfileImage = "pic_profile.png";
             }
             else if (parameters.TryGetValue("DateLabel", out DateTime dateLabel))
             {
@@ -51,12 +51,15 @@ namespace ProfileBook.ViewModels
         public int ProfileId { get; set; }
         public DateTime DateLabel { get; set; }
 
-        private bool isButtonEnabled;
+        /*private bool isButtonEnabled;
         public bool IsButtonEnabled
         {
             get { return isButtonEnabled; }
-            set { SetProperty(ref isButtonEnabled, value); }
-        }
+            set
+            {
+                SetProperty(ref isButtonEnabled, value);
+            }
+        }*/
 
         private string profileImage;
         public string ProfileImage
@@ -72,7 +75,9 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref nickName, value);
-                SwitchButtonEnabled();
+
+                //SwitchButtonEnabled();
+                SaveClickCommand.ChangeCanExecute();
             }
         }
 
@@ -83,7 +88,9 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref name, value);
-                SwitchButtonEnabled();
+
+                //SwitchButtonEnabled();
+                SaveClickCommand.ChangeCanExecute();
             }
         }
 
@@ -141,6 +148,7 @@ namespace ProfileBook.ViewModels
 
         private async void SaveClick()
         {
+
             if (DateLabel == new DateTime())
                 DateLabel = DateTime.Now;
 
@@ -161,11 +169,13 @@ namespace ProfileBook.ViewModels
                 parameters.Add("Id", UserId);
                 await NavigationService.GoBackAsync(parameters);
             }
+
         }
 
-        private void SwitchButtonEnabled()
+        private bool SwitchButtonEnabled()
         {
-            IsButtonEnabled = !string.IsNullOrEmpty(NickName) && !string.IsNullOrEmpty(Name);
+            bool result = !string.IsNullOrEmpty(NickName) && !string.IsNullOrEmpty(Name);
+            return result;
         }
     }
 }

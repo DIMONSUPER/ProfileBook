@@ -4,5 +4,16 @@
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ProfileBook.Views.SettingsPage">
-  
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Сортировать по:"/>
+            <RadioButton Text="по дате добалвения в базу данных"
+                         IsChecked="True"
+                         GroupName="sort"/>
+            <RadioButton Text="по имени"
+                         GroupName="sort"/>
+            <RadioButton Text="по NickName"
+                         GroupName="sort"/>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

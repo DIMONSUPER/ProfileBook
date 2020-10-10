@@ -52,7 +52,7 @@ namespace ProfileBook.ViewModels
         public ProfileModel SelectedProfile
         {
             get { return selectedProfile; }
-            set 
+            set
             {
                 SetProperty(ref selectedProfile, value);
                 ProfileClickCommand.Execute(selectedProfile);
@@ -77,7 +77,7 @@ namespace ProfileBook.ViewModels
         public ObservableCollection<ProfileModel> ProfileList
         {
             get { return profileList; }
-            set{ SetProperty(ref profileList, value); }
+            set { SetProperty(ref profileList, value); }
         }
 
         private async void LogOutClick()
@@ -110,7 +110,7 @@ namespace ProfileBook.ViewModels
         public void RefreshList()
         {
             var profiles = ProfileRepositoryService.GetItems().Where(p => p.UserId == UserId);
-            if (profiles.ToList().Count!=0)
+            if (profiles.ToList().Count != 0)
             {
                 ProfileList = new ObservableCollection<ProfileModel>(profiles);
                 IsListVisible = true;
