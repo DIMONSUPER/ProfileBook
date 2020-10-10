@@ -18,7 +18,7 @@ namespace ProfileBook.ViewModels
         public ICommand EditClickCommand => new Command<ProfileModel>(EditClick);
         public ICommand DeleteClickCommand => new Command<ProfileModel>(DeleteClick);
         public ICommand AddButtonClickCommand => new Command(AddButtonClick);
-        public ICommand ImageClickCommand => new Command<ProfileModel>(ImageClick);
+        public ICommand ProfileClickCommand => new Command<ProfileModel>(ProfileClick);
 
         IProfileRepositoryService ProfileRepositoryService { get; }
         IUserRepositoryService UserRepositoryService { get; }
@@ -47,6 +47,17 @@ namespace ProfileBook.ViewModels
         }
 
         public int UserId { get; set; }
+
+        private ProfileModel selectedProfile;
+        public ProfileModel SelectedProfile
+        {
+            get { return selectedProfile; }
+            set 
+            {
+                SetProperty(ref selectedProfile, value);
+                ProfileClickCommand.Execute(selectedProfile);
+            }
+        }
 
         private bool isListVisible;
         public bool IsListVisible
@@ -112,7 +123,7 @@ namespace ProfileBook.ViewModels
             }
         }
 
-        private async void ImageClick(ProfileModel model)
+        private async void ProfileClick(ProfileModel model)
         {
             var parameters = new NavigationParameters();
             parameters.Add(nameof(model.ProfileImage), model.ProfileImage);

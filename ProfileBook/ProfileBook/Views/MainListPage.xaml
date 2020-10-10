@@ -25,8 +25,8 @@
             <StackLayout  Grid.Row="0">
                 <ListView ItemsSource="{Binding ProfileList}"
                           HasUnevenRows="True"
-                          IsVisible="{Binding IsListVisible}">
-
+                          IsVisible="{Binding IsListVisible}"
+                          SelectedItem="{Binding SelectedProfile, Mode=TwoWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -51,14 +51,12 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <ImageButton Grid.RowSpan="3"
-                                                     BackgroundColor="Transparent"
-                                                     Command="{Binding BindingContext.ImageClickCommand, Source={x:Reference _this}}"
-                                                     CommandParameter="{Binding .}"
-                                                     Source="{Binding ProfileImage}"
-                                                     Aspect="AspectFill"
-                                                     HeightRequest="60"
-                                                     WidthRequest="60"/>
+                                        <Image Grid.RowSpan="3"
+                                               BackgroundColor="Transparent"
+                                               Source="{Binding ProfileImage}"
+                                               Aspect="AspectFill"
+                                               HeightRequest="60"
+                                               WidthRequest="60"/>
 
                                         <Label Grid.Column="1"
                                                Text="{Binding NickNameLabel}"
