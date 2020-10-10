@@ -1,7 +1,6 @@
 ﻿using Acr.UserDialogs;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using Prism.Commands;
 using Prism.Navigation;
 using ProfileBook.Models;
 using ProfileBook.Services.ProfileRepository;
@@ -14,7 +13,7 @@ namespace ProfileBook.ViewModels
 {
     public class AddEditProfilePageViewModel : ViewModelBase
     {
-        public Command SaveClickCommand => new Command(SaveClick, SwitchButtonEnabled);
+        public ICommand SaveClickCommand => new Command(SaveClick);
         public ICommand ImageClickCommand => new Command(ImageClick);
 
         private IProfileRepositoryService ProfileRepositoryService { get; }
@@ -51,16 +50,6 @@ namespace ProfileBook.ViewModels
         public int ProfileId { get; set; }
         public DateTime DateLabel { get; set; }
 
-        /*private bool isButtonEnabled;
-        public bool IsButtonEnabled
-        {
-            get { return isButtonEnabled; }
-            set
-            {
-                SetProperty(ref isButtonEnabled, value);
-            }
-        }*/
-
         private string profileImage;
         public string ProfileImage
         {
@@ -75,9 +64,6 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref nickName, value);
-
-                //SwitchButtonEnabled();
-                SaveClickCommand.ChangeCanExecute();
             }
         }
 
@@ -88,9 +74,6 @@ namespace ProfileBook.ViewModels
             set
             {
                 SetProperty(ref name, value);
-
-                //SwitchButtonEnabled();
-                SaveClickCommand.ChangeCanExecute();
             }
         }
 
@@ -148,34 +131,38 @@ namespace ProfileBook.ViewModels
 
         private async void SaveClick()
         {
-
-            if (DateLabel == new DateTime())
-                DateLabel = DateTime.Now;
-
-            int result = ProfileRepositoryService.SaveItem(new ProfileModel
+            if (IsButtonEnabled())
             {
-                Id = ProfileId,
-                NameLabel = Name,
-                DateLabel = DateLabel,
-                NickNameLabel = NickName,
-                ProfileImage = profileImage,
-                Description = Description,
-                UserId = UserId
-            });
+                if (DateLabel == new DateTime())
+                    DateLabel = DateTime.Now;
 
-            if (result != -1)
-            {
-                var parameters = new NavigationParameters();
-                parameters.Add("Id", UserId);
-                await NavigationService.GoBackAsync(parameters);
+                int result = ProfileRepositoryService.SaveItem(new ProfileModel
+                {
+                    Id = ProfileId,
+                    NameLabel = Name,
+                    DateLabel = DateLabel,
+                    NickNameLabel = NickName,
+                    ProfileImage = profileImage,
+                    Description = Description,
+                    UserId = UserId
+                });
+
+                if (result != -1)
+                {
+                    var parameters = new NavigationParameters();
+                    parameters.Add("Id", UserId);
+                    await NavigationService.GoBackAsync(parameters);
+                }
             }
-
+            else
+            {
+                UserDialogs.Instance.Alert("Вы должны заполнить все поля имя и никнейма!");
+            }
         }
 
-        private bool SwitchButtonEnabled()
+        public bool IsButtonEnabled()
         {
-            bool result = !string.IsNullOrEmpty(NickName) && !string.IsNullOrEmpty(Name);
-            return result;
+            return !string.IsNullOrEmpty(NickName) && !string.IsNullOrEmpty(Name);
         }
     }
 }
