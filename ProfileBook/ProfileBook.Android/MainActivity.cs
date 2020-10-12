@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using Prism;
 using Prism.Ioc;
+using Xamarin.Forms;
 
 namespace ProfileBook.Droid
 {
@@ -19,7 +20,7 @@ namespace ProfileBook.Droid
             UserDialogs.Init(this);
 
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
-
+            Forms.SetFlags("RadioButton_Experimental");
             base.OnCreate(savedInstanceState);
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);

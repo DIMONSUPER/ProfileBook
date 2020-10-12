@@ -5,15 +5,35 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ProfileBook.Views.SettingsPage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Сортировать по:"/>
-            <RadioButton Text="по дате добалвения в базу данных"
-                         IsChecked="True"
-                         GroupName="sort"/>
-            <RadioButton Text="по имени"
-                         GroupName="sort"/>
-            <RadioButton Text="по NickName"
-                         GroupName="sort"/>
+        <StackLayout Margin="5">
+            <Label Text="Sort by:" HorizontalOptions="Center" FontSize="20" FontAttributes="Bold"/>
+
+            <StackLayout Orientation="Horizontal">
+                <RadioButton IsChecked="{Binding SortByDate}" GroupName="sort"/>
+                <Label VerticalOptions="Center" Text="Date" FontSize="16">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DateLabelClickCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <RadioButton IsChecked="{Binding SortByName}" GroupName="sort"/>
+                <Label VerticalOptions="Center" Text="Name" FontSize="16">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NameLabelClickCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <RadioButton IsChecked="{Binding SortByNickName}" GroupName="sort"/>
+                <Label VerticalOptions="Center" Text="NickName" FontSize="16">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding  NickNameLabelClickCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

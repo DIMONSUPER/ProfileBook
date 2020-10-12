@@ -43,6 +43,7 @@ namespace ProfileBook.ViewModels
                 var user = UserRepositoryService.GetItems().FirstOrDefault(u => u.Name == Settings.RememberedLogin);
                 UserId = user.Id;
             }
+
             RefreshList();
         }
 
@@ -110,6 +111,14 @@ namespace ProfileBook.ViewModels
         public void RefreshList()
         {
             var profiles = ProfileRepositoryService.GetItems().Where(p => p.UserId == UserId);
+
+            if (Settings.RememberedRadioButton == "SortByDate" || string.IsNullOrEmpty(Settings.RememberedRadioButton))
+                profiles = profiles.OrderBy(p => p.DateLabel);
+            else if (Settings.RememberedRadioButton == "SortByName")
+                profiles = profiles.OrderBy(p => p.NameLabel);
+            else if (Settings.RememberedRadioButton == "SortByNickName")
+                profiles = profiles.OrderBy(p => p.NickNameLabel);
+
             if (profiles.ToList().Count != 0)
             {
                 ProfileList = new ObservableCollection<ProfileModel>(profiles);
