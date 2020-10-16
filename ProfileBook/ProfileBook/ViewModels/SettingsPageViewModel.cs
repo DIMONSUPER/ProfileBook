@@ -1,5 +1,11 @@
 ﻿using Prism.Navigation;
 using ProfileBook.Helpers;
+using ProfileBook.Resources;
+using ProfileBook.Themes;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -10,11 +16,21 @@ namespace ProfileBook.ViewModels
         public ICommand DateLabelClickCommand => new Command(DateLabelClick);
         public ICommand NameLabelClickCommand => new Command(NameLabelClick);
         public ICommand NickNameLabelClickCommand => new Command(NickNameLabelClick);
+        public ICommand CheckBoxClickCommand => new Command(CheckBoxClick);
 
         public SettingsPageViewModel(INavigationService navigationService)
             : base(navigationService)
         {
-            Title = "Settings";
+            IsDarkTheme = Settings.RememberedCheckBox;
+            if (!string.IsNullOrEmpty(Settings.RememberedLanguage))
+            {
+                SelectedItem = Settings.RememberedLanguage;
+            }
+            else
+            {
+                SelectedItem = "English";
+            }
+
             if (!string.IsNullOrEmpty(Settings.RememberedRadioButton))
             {
                 switch (Settings.RememberedRadioButton)
@@ -36,6 +52,53 @@ namespace ProfileBook.ViewModels
             else
             {
                 SortByDate = true;
+            }
+        }
+
+        private string _selectedItem;
+        public string SelectedItem
+        {
+            get { return _selectedItem; }
+            set
+            {
+                SetProperty(ref _selectedItem, value);
+                if (_selectedItem != null)
+                {
+                    var language = CultureInfo.GetCultures(CultureTypes.NeutralCultures).ToList().First(element => element.EnglishName.Contains(_selectedItem.ToString()));
+                    Thread.CurrentThread.CurrentUICulture = language;
+                    AppResources.Culture = language;
+
+                    if (_selectedItem != Settings.RememberedLanguage)
+                    {
+                        Settings.RememberedLanguage = _selectedItem;
+                        NavigationService.NavigateAsync("/NavigationPage/MainListPage");
+                    }
+                }
+            }
+        }
+
+        private bool isDarkTheme;
+        public bool IsDarkTheme
+        {
+            get { return isDarkTheme; }
+            set
+            {
+                SetProperty(ref isDarkTheme, value);
+                Settings.RememberedCheckBox = value;
+
+                ICollection<ResourceDictionary> mergedDictionaries = Application.Current.Resources.MergedDictionaries;
+                if (mergedDictionaries != null)
+                {
+                    mergedDictionaries.Clear();
+                    if (value == true)
+                    {
+                        mergedDictionaries.Add(new DarkTheme());
+                    }
+                    else
+                    {
+                        mergedDictionaries.Add(new LightTheme());
+                    }
+                }
             }
         }
 
@@ -73,6 +136,11 @@ namespace ProfileBook.ViewModels
                 if (value == true)
                     Settings.RememberedRadioButton = nameof(SortByNickName);
             }
+        }
+
+        private void CheckBoxClick()
+        {
+            IsDarkTheme = IsDarkTheme != true;
         }
 
         private void DateLabelClick()

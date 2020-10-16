@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:resource="clr-namespace:ProfileBook.Resources"
              x:Class="ProfileBook.Views.SignUpPage"
-             Title="{Binding Title}">
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             Title="{x:Static resource:AppResources.SignUp}">
     <ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand"
                      HorizontalOptions="FillAndExpand"
@@ -12,24 +14,28 @@
                      Spacing="0">
 
             <StackLayout VerticalOptions="CenterAndExpand">
-                <Entry Placeholder="Login"
-                       Text="{Binding UserLogin}"/>
+                <Entry Placeholder="{x:Static resource:AppResources.Login}"
+                       Text="{Binding UserLogin}"
+                       Style="{StaticResource EntryStyle}"/>
 
-                <Entry Placeholder="Password"
+                <Entry Placeholder="{x:Static resource:AppResources.Password}"
                        IsPassword="True"
-                       Text="{Binding UserPassword}"/>
+                       Text="{Binding UserPassword}"
+                       Style="{StaticResource EntryStyle}"/>
 
-                <Entry Placeholder="Confirm Password"
+                <Entry Placeholder="{x:Static resource:AppResources.ConfirmPassword}"
                        IsPassword="True"
-                       Text="{Binding ConfirmUserPassword}"/>
+                       Text="{Binding ConfirmUserPassword}"
+                       Style="{StaticResource EntryStyle}"/>
             </StackLayout>
 
-            <Button Text="Sign Up"
+            <Button Text="{x:Static resource:AppResources.SignUp}"
                     VerticalOptions="End"
                     Margin="0,0,0,80"
                     BackgroundColor="#ff901b"
                     BorderColor="Black"
                     BorderWidth="1"
+                    Style="{StaticResource ButtonStyle}"
                     Command="{Binding SignUpClickCommand}"
                     IsEnabled="{Binding IsButtonEnabled}"/>
 

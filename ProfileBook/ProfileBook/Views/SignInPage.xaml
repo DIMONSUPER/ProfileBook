@@ -2,9 +2,11 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:resource="clr-namespace:ProfileBook.Resources"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ProfileBook.Views.SignInPage"
-             Title="{Binding Title}">
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             Title="{x:Static resource:AppResources.SignIn}">
 
     <ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand"
@@ -13,31 +15,36 @@
                      Spacing="0">
             <StackLayout VerticalOptions="CenterAndExpand">
 
-                <Entry Placeholder="Login"
+                <Entry Placeholder="{x:Static resource:AppResources.Login}"
+                       Style="{StaticResource EntryStyle}"
                        Text="{Binding UserLogin}"/>
 
-                <Entry Placeholder="Password"
+                <Entry Placeholder="{x:Static resource:AppResources.Password}"
                        IsPassword="True"
+                       Style="{StaticResource EntryStyle}"
                        Text="{Binding UserPassword}"/>
             </StackLayout>
 
-            <Button Text="Sign in"
+            <Button Text="{x:Static resource:AppResources.SignIn}"
                     VerticalOptions="End"
                     Margin="0,0,0,20"
                     BackgroundColor="#ff901b"
                     BorderColor="Black"
                     BorderWidth="1"
+                    Style="{StaticResource ButtonStyle}"
                     Command="{Binding SignInClickCommand}"
                     IsEnabled="{Binding IsButtonEnabled}"/>
 
             <Label VerticalOptions="End"
                    Margin="0,0,0,50"
-                   HorizontalOptions="Center">
+                   HorizontalOptions="Center"
+                   Style="{StaticResource SmallLabelStyle}">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="SIGN UP"
-                      TextColor="Blue"
-                      TextDecorations="Underline">
+                        <Span Text="{x:Static resource:AppResources.SignUp}"
+                              TextColor="Blue"
+                              TextDecorations="Underline"
+                              TextTransform="Uppercase">
                             <Span.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding LabelClickCommand}"/>
                             </Span.GestureRecognizers>

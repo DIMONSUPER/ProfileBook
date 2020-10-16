@@ -3,14 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="ProfileBook.Views.SettingsPage">
+             xmlns:resource="clr-namespace:ProfileBook.Resources"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             x:Class="ProfileBook.Views.SettingsPage"
+             Title="{x:Static resource:AppResources.Settings}">
     <ContentPage.Content>
         <StackLayout Margin="5">
-            <Label Text="Sort by:" HorizontalOptions="Center" FontSize="20" FontAttributes="Bold"/>
+            <Label Text="{x:Static resource:AppResources.SortBy}" HorizontalOptions="Center" FontSize="20" FontAttributes="Bold" Style="{StaticResource SmallLabelStyle}"/>
 
             <StackLayout Orientation="Horizontal">
-                <RadioButton IsChecked="{Binding SortByDate}" GroupName="sort"/>
-                <Label VerticalOptions="Center" Text="Date" FontSize="16">
+                <RadioButton IsChecked="{Binding SortByDate}" GroupName="sort" Style="{StaticResource RadioButtonStyle}"/>
+                <Label VerticalOptions="Center" Text="{x:Static resource:AppResources.Date}" FontSize="16" Style="{StaticResource SmallLabelStyle}">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding DateLabelClickCommand}"/>
                     </Label.GestureRecognizers>
@@ -18,8 +21,8 @@
             </StackLayout>
 
             <StackLayout Orientation="Horizontal">
-                <RadioButton IsChecked="{Binding SortByName}" GroupName="sort"/>
-                <Label VerticalOptions="Center" Text="Name" FontSize="16">
+                <RadioButton IsChecked="{Binding SortByName}" GroupName="sort" Style="{StaticResource RadioButtonStyle}"/>
+                <Label VerticalOptions="Center" Text="{x:Static resource:AppResources.Name}" FontSize="16" Style="{StaticResource SmallLabelStyle}">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NameLabelClickCommand}" />
                     </Label.GestureRecognizers>
@@ -27,13 +30,32 @@
             </StackLayout>
 
             <StackLayout Orientation="Horizontal">
-                <RadioButton IsChecked="{Binding SortByNickName}" GroupName="sort"/>
-                <Label VerticalOptions="Center" Text="NickName" FontSize="16">
+                <RadioButton IsChecked="{Binding SortByNickName}" GroupName="sort" Style="{StaticResource RadioButtonStyle}"/>
+                <Label VerticalOptions="Center" Text="{x:Static resource:AppResources.NickName}" FontSize="16" Style="{StaticResource SmallLabelStyle}">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding  NickNameLabelClickCommand}"/>
                     </Label.GestureRecognizers>
                 </Label>
             </StackLayout>
+
+            <Label Text="{x:Static resource:AppResources.DarkTheme}" HorizontalOptions="Center" FontSize="20" FontAttributes="Bold" Style="{StaticResource SmallLabelStyle}"/>
+            <StackLayout Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding IsDarkTheme}"/>
+                <Label VerticalOptions="Center" Text="{x:Static resource:AppResources.DarkTheme}" FontSize="16" Style="{StaticResource SmallLabelStyle}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding  CheckBoxClickCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+            <Picker SelectedItem="{Binding SelectedItem}"
+                    Style="{StaticResource PickerStyle}">
+                <Picker.Items>
+                    <x:String>English</x:String>
+                    <x:String>Russian</x:String>
+                    <x:String>Ukrainian</x:String>
+                </Picker.Items>
+            </Picker>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

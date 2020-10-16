@@ -2,8 +2,11 @@
 using Prism.Navigation;
 using ProfileBook.Helpers;
 using ProfileBook.Models;
+using ProfileBook.Resources;
 using ProfileBook.Services.ProfileRepository;
 using ProfileBook.Services.UserRepository;
+using ProfileBook.Themes;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -20,16 +23,18 @@ namespace ProfileBook.ViewModels
         public ICommand AddButtonClickCommand => new Command(AddButtonClick);
         public ICommand ProfileClickCommand => new Command<ProfileModel>(ProfileClick);
 
-        IProfileRepositoryService ProfileRepositoryService { get; }
-        IUserRepositoryService UserRepositoryService { get; }
+        private IProfileRepositoryService ProfileRepositoryService { get; }
+        private IUserRepositoryService UserRepositoryService { get; }
+        private IUserDialogs UserDialogs { get; }
         public MainListViewModel(INavigationService navigationService,
             IUserRepositoryService userRepositoryService,
-            IProfileRepositoryService profileRepositoryService)
+            IProfileRepositoryService profileRepositoryService,
+            IUserDialogs userDialogs)
             : base(navigationService)
         {
-            Title = "Main Page";
             ProfileRepositoryService = profileRepositoryService;
             UserRepositoryService = userRepositoryService;
+            UserDialogs = userDialogs;
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -43,7 +48,6 @@ namespace ProfileBook.ViewModels
                 var user = UserRepositoryService.GetItems().FirstOrDefault(u => u.Name == Settings.RememberedLogin);
                 UserId = user.Id;
             }
-
             RefreshList();
         }
 
@@ -142,10 +146,10 @@ namespace ProfileBook.ViewModels
 
         private async void DeleteClick(ProfileModel model)
         {
-            var result = await UserDialogs.Instance.ConfirmAsync(new ConfirmConfig()
-                .SetTitle("Вы действительно хотите удалить?")
-                .SetOkText("Да")
-                .SetCancelText("Нет"));
+            var result = await UserDialogs.ConfirmAsync(new ConfirmConfig()
+                .SetTitle(AppResources.ConfirmationTitle)
+                .SetOkText(AppResources.Yes)
+                .SetCancelText(AppResources.No));
 
             if (result)
             {

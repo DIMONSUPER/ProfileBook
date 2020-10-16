@@ -1,6 +1,7 @@
 ﻿using Prism.Navigation;
 using Prism.Services;
 using ProfileBook.Models;
+using ProfileBook.Resources;
 using ProfileBook.Services.UserRepository;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -19,7 +20,6 @@ namespace ProfileBook.ViewModels
             IPageDialogService pageDialogService)
             : base(navigationService)
         {
-            Title = "Users SignUp";
             UserRepositoryService = userRepositoryService;
             PageDialogService = pageDialogService;
         }
@@ -72,14 +72,14 @@ namespace ProfileBook.ViewModels
             {
                 if (UserPassword != ConfirmUserPassword)
                 {
-                    await PageDialogService.DisplayAlertAsync("Passwords don't match", "Passwords must match!", "OK");
+                    await PageDialogService.DisplayAlertAsync(AppResources.PasswordsMatch, AppResources.PasswordsMatch, "OK");
                 }
                 else if (ValidatePassword(UserPassword, ref message))
                 {
                     int result = UserRepositoryService.SaveItem(new UserModel { Name = UserLogin, Password = UserPassword });
                     if (result != -1)
                     {
-                        await PageDialogService.DisplayAlertAsync("Registration is successful", "User was successfully registrated", "OK");
+                        await PageDialogService.DisplayAlertAsync(AppResources.RegistrationSuccessfullTitle, AppResources.RegistrationSuccessfull, "OK");
 
                         var parameters = new NavigationParameters();
                         parameters.Add(nameof(UserLogin), UserLogin);
@@ -88,14 +88,14 @@ namespace ProfileBook.ViewModels
                     }
                     else
                     {
-                        await PageDialogService.DisplayAlertAsync("Registration failed", "User with such login already exists", "OK");
+                        await PageDialogService.DisplayAlertAsync(AppResources.RegistrationFailTitle, AppResources.RegistrationFail, "OK");
                     }
                 }
             }
 
             if (!string.IsNullOrEmpty(message))
             {
-                await PageDialogService.DisplayAlertAsync("Password is incorrect", message, "OK");
+                await PageDialogService.DisplayAlertAsync(AppResources.PasswordIncorrect, message, "OK");
             }
         }
 
@@ -106,7 +106,7 @@ namespace ProfileBook.ViewModels
             var hasMinChars = new Regex(@"^.{4,}");
             if (!hasMinChars.IsMatch(login))
             {
-                message += "\nLogin should contain at least 4 characters";
+                message += $"\n{AppResources.LoginMinChar}";
 
                 result = false;
             }
@@ -114,7 +114,7 @@ namespace ProfileBook.ViewModels
             var hasMaxChars = new Regex(@"^.{1,16}$");
             if (!hasMaxChars.IsMatch(login))
             {
-                message += "\nLogin should contain at max 16 characters";
+                message += $"\n{AppResources.LoginMinChar}";
 
                 result = false;
             }
@@ -129,7 +129,7 @@ namespace ProfileBook.ViewModels
             var hasBeginNotNumber = new Regex(@"^\D");
             if (!hasBeginNotNumber.IsMatch(pass))
             {
-                message += "Password shouldn't start from a number";
+                message += AppResources.PasswordNotNumber;
 
                 result = false;
             }
@@ -137,7 +137,7 @@ namespace ProfileBook.ViewModels
             var hasNumber = new Regex(@"[0-9]+");
             if (!hasNumber.IsMatch(pass))
             {
-                message += "\nPassword should contain number";
+                message += $"\n{AppResources.PasswordNumber}";
 
                 result = false;
             }
@@ -145,7 +145,7 @@ namespace ProfileBook.ViewModels
             var hasLowerChar = new Regex(@"[a-z]+");
             if (!hasLowerChar.IsMatch(pass))
             {
-                message += "\nPassword should contain lower case character";
+                message += $"\n{AppResources.PasswordLower}";
 
                 result = false;
             }
@@ -153,7 +153,7 @@ namespace ProfileBook.ViewModels
             var hasUpperChar = new Regex(@"[A-Z]+");
             if (!hasUpperChar.IsMatch(pass))
             {
-                message += "\nPassword should contain upper case character";
+                message += $"\n{AppResources.PasswordUpper}";
 
                 result = false;
             }
@@ -161,7 +161,7 @@ namespace ProfileBook.ViewModels
             var hasMinChars = new Regex(@"^.{8,}");
             if (!hasMinChars.IsMatch(pass))
             {
-                message += "\nPassword should contain at least 8 characters";
+                message += $"\n{AppResources.PasswordMinChar}";
 
                 result = false;
             }
@@ -169,7 +169,7 @@ namespace ProfileBook.ViewModels
             var hasMaxChars = new Regex(@"^.{1,16}$");
             if (!hasMaxChars.IsMatch(pass))
             {
-                message += "\nPassword should contain at max 16 characters";
+                message += $"\n{AppResources.PasswordMaxChar}";
 
                 result = false;
             }

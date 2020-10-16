@@ -1,11 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
-             x:Class="ProfileBook.App">
-  <Application.Resources>
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:prism="http://prismlibrary.com"
+                        x:Class="ProfileBook.App">
+    <Application.Resources>
+        <ResourceDictionary Source="Themes/LightTheme.xaml" />
 
-    <!-- Application resource dictionary -->
+        <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor"
+                    Value="{DynamicResource NavigationBarColor}" />
+            <Setter Property="BarTextColor"
+                    Value="{DynamicResource SecondaryColor}" />
+        </Style>
 
-  </Application.Resources>
+        <Style x:Key="ButtonStyle"
+               TargetType="Button">
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource PrimaryColor}" />
+            <Setter Property="TextColor"
+                    Value="{DynamicResource SecondaryColor}" />
+        </Style>
+        <Style x:Key="NavigationButtonStyle"
+               TargetType="Button">
+            <Setter Property="BackgroundColor"
+                    Value="Transparent" />
+            <Setter Property="TextColor"
+                    Value="{DynamicResource SecondaryColor}" />
+        </Style>
+
+        <Style x:Key="EntryStyle"
+               TargetType="Entry">
+            <Setter Property="TextColor"
+                    Value="{DynamicResource PrimaryTextColor}"/>
+            <Setter Property="PlaceholderColor"
+                    Value="{DynamicResource TertiaryTextColor}"/>
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource EntryBackgroundColor}"/>
+        </Style>
+
+        <Style x:Key="PickerStyle"
+               TargetType="Picker">
+            <Setter Property="TextColor"
+                    Value="{DynamicResource PrimaryTextColor}"/>
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource EntryBackgroundColor}"/>
+        </Style>
+
+        <Style x:Key="RadioButtonStyle"
+               TargetType="RadioButton">
+            <Setter Property="BorderColor"
+                    Value="{DynamicResource RadioButtonBorderColor}"/>
+            <Setter Property="BackgroundColor"
+                    Value="Transparent"/>
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource Transparent}"/>
+            <Setter Property="Scale"
+                    Value="0.7"/>
+            <Setter Property="CornerRadius"
+                    Value="100"/>
+            <Setter Property="BorderWidth"
+                    Value="1"/>
+        </Style>
+
+        <Style x:Key="EditorStyle"
+               TargetType="Editor">
+            <Setter Property="TextColor"
+                    Value="{DynamicResource SecondaryColor}"/>
+            <Setter Property="PlaceholderColor"
+                    Value="{DynamicResource TertiaryTextColor}"/>
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource EntryBackgroundColor}"/>
+        </Style>
+        
+        <Style x:Key="SmallLabelStyle"
+               TargetType="Label">
+            <Setter Property="TextColor"
+                    Value="{DynamicResource TertiaryTextColor}" />
+        </Style>
+    </Application.Resources>
 </prism:PrismApplication>

@@ -2,17 +2,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProfileBook.Views.MainListPage"
-             Title="{Binding Title}"
+             xmlns:resource="clr-namespace:ProfileBook.Resources"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             Title="{x:Static resource:AppResources.MainListTitle}"
              x:Name="_this">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding LogOutClickCommand}" 
-                     Text = "Log out"
+                     Text = "{x:Static resource:AppResources.LogOut}"
                      IconImageSource="ic_exit_to_app.png"
                      Order = "Primary"/>
 
         <ToolbarItem Command="{Binding SettingsClickCommand}" 
-                     Text = "Settings"
+                     Text = "{x:Static resource:AppResources.Settings}"
                      IconImageSource="ic_settings.png"
                      Order = "Primary"/>
     </ContentPage.ToolbarItems>
@@ -31,10 +33,10 @@
                         <DataTemplate>
                             <ViewCell>
                                 <ViewCell.ContextActions>
-                                    <MenuItem Text="Edit"
+                                    <MenuItem Text="{x:Static resource:AppResources.Edit}"
                                               Command="{Binding BindingContext.EditClickCommand, Source={x:Reference _this}}"
                                               CommandParameter="{Binding .}"/>
-                                    <MenuItem Text="Delete"
+                                    <MenuItem Text="{x:Static resource:AppResources.Delete}"
                                               Command="{Binding BindingContext.DeleteClickCommand, Source={x:Reference _this}}"
                                               CommandParameter="{Binding .}"/>
                                 </ViewCell.ContextActions>
@@ -59,16 +61,19 @@
                                                WidthRequest="60"/>
 
                                         <Label Grid.Column="1"
+                                               Style="{StaticResource SmallLabelStyle}"
                                                Text="{Binding NickNameLabel}"
                                                FontAttributes="Bold"/>
 
                                         <Label Grid.Row="1"
                                                Grid.Column="1"
+                                               Style="{StaticResource SmallLabelStyle}"
                                                Text="{Binding NameLabel}"
                                                VerticalOptions="Center"/>
 
                                         <Label Grid.Row="2"
                                                Grid.Column="1"
+                                               Style="{StaticResource SmallLabelStyle}"
                                                Text="{Binding DateLabel}"
                                                FontAttributes="Italic"
                                                VerticalOptions="End"/>
@@ -79,10 +84,11 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <Label Text="No profiles added."
+                <Label Text="{x:Static resource:AppResources.EmptyLabel}"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="CenterAndExpand"
-                       IsVisible="{Binding IsLabelVisible}"/>
+                       IsVisible="{Binding IsLabelVisible}"
+                       Style="{StaticResource SmallLabelStyle}"/>
             </StackLayout>
             <ImageButton Source="ic_add.png" 
                          BackgroundColor="RoyalBlue"

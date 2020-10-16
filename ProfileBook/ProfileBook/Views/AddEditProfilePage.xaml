@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
-             prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ProfileBook.Views.AddEditProfilePage"
-             Title="{Binding Title}">
+             xmlns:resource="clr-namespace:ProfileBook.Resources"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             Title="{x:Static resource:AppResources.SignIn}">
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding SaveClickCommand}"
-                     Text = "Save"
+                     Text = "{x:Static resource:AppResources.Save}"
                      IconImageSource="ic_save.png"
                      Order = "Primary"/>
     </ContentPage.ToolbarItems>
@@ -20,13 +20,18 @@
                          BackgroundColor="Transparent"
                          HeightRequest="150"
                          WidthRequest="150"/>
-            <Entry Placeholder="NickName"
-                   Text="{Binding NickName}"/>
-            <Entry Placeholder="Name"
-                   Text="{Binding Name}"/>
-            <Editor Placeholder="Description"
+
+            <Entry Placeholder="{x:Static resource:AppResources.NickName}"
+                   Text="{Binding NickName}"
+                   Style="{StaticResource EntryStyle}"/>
+
+            <Entry Placeholder="{x:Static resource:AppResources.Name}"
+                   Text="{Binding Name}"
+                   Style="{StaticResource EntryStyle}"/>
+
+            <Editor Placeholder="{x:Static resource:AppResources.Description}"
                     Text="{Binding Description}"
-                    BackgroundColor="#D4D4D4"
+                    Style="{StaticResource EditorStyle}"
                     VerticalOptions="FillAndExpand"
                     MaxLength="120"/>
         </StackLayout>

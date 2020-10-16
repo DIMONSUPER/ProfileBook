@@ -1,6 +1,7 @@
 ﻿using Prism.Navigation;
 using Prism.Services;
 using ProfileBook.Helpers;
+using ProfileBook.Resources;
 using ProfileBook.Services.UserRepository;
 using System.Linq;
 using System.Windows.Input;
@@ -20,7 +21,6 @@ namespace ProfileBook.ViewModels
             IPageDialogService pageDialogService)
             : base(navigationService)
         {
-            Title = "Users SignIn";
             UserRepositoryService = userRepositoryService;
             PageDialogService = pageDialogService;
 
@@ -88,7 +88,7 @@ namespace ProfileBook.ViewModels
             }
             else
             {
-                await PageDialogService.DisplayAlertAsync("Invalid login or password!", "Invalid login or password!", "OK");
+                await PageDialogService.DisplayAlertAsync(AppResources.InvalidLogin, AppResources.InvalidLogin, "OK");
                 Settings.RememberedLogin = string.Empty;
                 UserPassword = string.Empty;
             }

@@ -3,6 +3,7 @@ using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Prism.Navigation;
 using ProfileBook.Models;
+using ProfileBook.Resources;
 using ProfileBook.Services.ProfileRepository;
 using System;
 using System.Linq;
@@ -17,12 +18,14 @@ namespace ProfileBook.ViewModels
         public ICommand ImageClickCommand => new Command(ImageClick);
 
         private IProfileRepositoryService ProfileRepositoryService { get; }
+        private IUserDialogs UserDialogs { get; }
         public AddEditProfilePageViewModel(INavigationService navigationService,
-            IProfileRepositoryService profileRepositoryService)
+            IProfileRepositoryService profileRepositoryService,
+            IUserDialogs userDialogs)
             : base(navigationService)
         {
-            Title = "Add Profile";
             ProfileRepositoryService = profileRepositoryService;
+            UserDialogs = userDialogs;
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -86,10 +89,10 @@ namespace ProfileBook.ViewModels
 
         private void ImageClick()
         {
-            UserDialogs.Instance.ActionSheet(new ActionSheetConfig()
-                                             .SetTitle("Choose picture from")
-                                             .Add("Camera", ChooseFromCamera, "ic_camera_alt.png")
-                                             .Add("Gallery", ChooseFromGallery, "ic_collections.png"));
+            UserDialogs.ActionSheet(new ActionSheetConfig()
+                                             .SetTitle(AppResources.ChoosePicture)
+                                             .Add(AppResources.Camera, ChooseFromCamera, "ic_camera_alt.png")
+                                             .Add(AppResources.Gallery, ChooseFromGallery, "ic_collections.png"));
         }
 
         private async void ChooseFromCamera()
@@ -156,7 +159,7 @@ namespace ProfileBook.ViewModels
             }
             else
             {
-                UserDialogs.Instance.Alert("Вы должны заполнить все поля имя и никнейма!");
+                UserDialogs.Alert(AppResources.FieldsFilled);
             }
         }
 
