@@ -1,14 +1,11 @@
-using Prism;
+﻿using Prism;
 using Prism.Ioc;
 using ProfileBook.ViewModels;
 using ProfileBook.Views;
 using Xamarin.Forms;
-using ProfileBook.Services.ProfileRepository;
-using ProfileBook.Services.UserRepository;
 using ProfileBook.Helpers;
 using Prism.Plugin.Popups;
 using Acr.UserDialogs;
-using Plugin.Settings.Abstractions;
 using Plugin.Settings;
 using System.Collections.Generic;
 using ProfileBook.Themes;
@@ -16,6 +13,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using ProfileBook.Resources;
+using ProfileBook.Services;
 
 namespace ProfileBook
 {
@@ -74,11 +72,10 @@ namespace ProfileBook
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterInstance<IUserRepositoryService>(Container.Resolve<UserRepositoryService>());
-            containerRegistry.RegisterInstance<IProfileRepositoryService>(Container.Resolve<ProfileRepositoryService>());
+            containerRegistry.RegisterInstance<IRepositoryService>(Container.Resolve<RepositoryService>());
 
-            containerRegistry.RegisterInstance<IUserDialogs>(UserDialogs.Instance);
-            containerRegistry.RegisterInstance<ISettings>(CrossSettings.Current);
+            containerRegistry.RegisterInstance(UserDialogs.Instance);
+            containerRegistry.RegisterInstance(CrossSettings.Current);
 
             containerRegistry.RegisterPopupNavigationService();
 

@@ -65,7 +65,7 @@
         <Style x:Key="EditorStyle"
                TargetType="Editor">
             <Setter Property="TextColor"
-                    Value="{DynamicResource SecondaryColor}"/>
+                    Value="{DynamicResource PrimaryTextColor}"/>
             <Setter Property="PlaceholderColor"
                     Value="{DynamicResource TertiaryTextColor}"/>
             <Setter Property="BackgroundColor"

@@ -19,10 +19,23 @@ namespace ProfileBook.Helpers
         private const string RememberedRadioButtonSettingsKey = "remembered_radiobutton_key";
         private const string RememberedCheckBoxSettingsKey = "remembered_checkbox_key";
         private const string RememberedLanguageKey = "remembered_language_key";
+        private const string RememberedUserIdKey = "remembered_userid_key";
         private static readonly string SettingsDefault = string.Empty;
         private static readonly bool BoolSettingsDefault = false;
 
         #endregion
+
+        public static int RememberedUserId
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(RememberedUserIdKey, 0);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(RememberedUserIdKey, value);
+            }
+        }
 
         public static bool RememberedCheckBox
         {

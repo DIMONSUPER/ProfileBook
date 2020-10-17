@@ -3,7 +3,7 @@ using System;
 
 namespace ProfileBook.Models
 {
-    public class ProfileModel
+    public class ProfileModel : IEntityBase
     {
         [PrimaryKey, AutoIncrement, Column("id")]
         public int Id { get; set; }

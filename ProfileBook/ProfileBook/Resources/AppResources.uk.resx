@@ -172,13 +172,13 @@
     <value>Розлогінитися</value>
   </data>
   <data name="MainListTitle" xml:space="preserve">
-    <value>Главний лист</value>
+    <value>Головний лист</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Им'я</value>
+    <value>Ім'я</value>
   </data>
   <data name="NickName" xml:space="preserve">
-    <value>Никнейм</value>
+    <value>Нікнейм</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Ні</value>

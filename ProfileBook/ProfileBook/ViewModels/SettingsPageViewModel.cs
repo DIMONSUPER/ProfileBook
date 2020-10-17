@@ -90,7 +90,7 @@ namespace ProfileBook.ViewModels
                 if (mergedDictionaries != null)
                 {
                     mergedDictionaries.Clear();
-                    if (value == true)
+                    if (isDarkTheme == true)
                     {
                         mergedDictionaries.Add(new DarkTheme());
                     }

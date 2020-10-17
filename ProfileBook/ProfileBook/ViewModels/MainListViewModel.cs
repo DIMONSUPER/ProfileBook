@@ -3,11 +3,12 @@ using Prism.Navigation;
 using ProfileBook.Helpers;
 using ProfileBook.Models;
 using ProfileBook.Resources;
-using ProfileBook.Services.ProfileRepository;
-using ProfileBook.Services.UserRepository;
-using ProfileBook.Themes;
+using ProfileBook.Services;
+using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -23,35 +24,22 @@ namespace ProfileBook.ViewModels
         public ICommand AddButtonClickCommand => new Command(AddButtonClick);
         public ICommand ProfileClickCommand => new Command<ProfileModel>(ProfileClick);
 
-        private IProfileRepositoryService ProfileRepositoryService { get; }
-        private IUserRepositoryService UserRepositoryService { get; }
+        private IRepositoryService RepositoryService { get; }
         private IUserDialogs UserDialogs { get; }
         public MainListViewModel(INavigationService navigationService,
-            IUserRepositoryService userRepositoryService,
-            IProfileRepositoryService profileRepositoryService,
+            IRepositoryService repositoryService,
             IUserDialogs userDialogs)
             : base(navigationService)
         {
-            ProfileRepositoryService = profileRepositoryService;
-            UserRepositoryService = userRepositoryService;
+            RepositoryService = repositoryService;
             UserDialogs = userDialogs;
+            RepositoryService.InitTable<ProfileModel>();
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            if (parameters.TryGetValue("Id", out int userId))
-            {
-                UserId = userId;
-            }
-            else if (!string.IsNullOrEmpty(Settings.RememberedLogin))
-            {
-                var user = UserRepositoryService.GetItems().FirstOrDefault(u => u.Name == Settings.RememberedLogin);
-                UserId = user.Id;
-            }
             RefreshList();
         }
-
-        public int UserId { get; set; }
 
         private ProfileModel selectedProfile;
         public ProfileModel SelectedProfile
@@ -99,6 +87,11 @@ namespace ProfileBook.ViewModels
         private async void EditClick(ProfileModel model)
         {
             var parametеrs = new NavigationParameters();
+            parametеrs.Add(nameof(model.ProfileImage), model.ProfileImage);
+            parametеrs.Add(nameof(model.NickNameLabel), model.NickNameLabel);
+            parametеrs.Add(nameof(model.NameLabel), model.NameLabel);
+            parametеrs.Add(nameof(model.Description), model.Description);
+            parametеrs.Add(nameof(model.Id), model.Id);
             parametеrs.Add(nameof(model.DateLabel), model.DateLabel);
 
             await NavigationService.NavigateAsync("AddEditProfilePage", parametеrs);
@@ -106,22 +99,24 @@ namespace ProfileBook.ViewModels
 
         private async void AddButtonClick()
         {
-            var parameters = new NavigationParameters();
-            parameters.Add(nameof(UserId), UserId);
-
-            await NavigationService.NavigateAsync("AddEditProfilePage", parameters);
+            await NavigationService.NavigateAsync("AddEditProfilePage");
         }
 
-        public void RefreshList()
+        public async void RefreshList()
         {
-            var profiles = ProfileRepositoryService.GetItems().Where(p => p.UserId == UserId);
-
+            var profiles = await RepositoryService.GetAllAsync<ProfileModel>(p => p.UserId == Settings.RememberedUserId);
             if (Settings.RememberedRadioButton == "SortByDate" || string.IsNullOrEmpty(Settings.RememberedRadioButton))
+            {
                 profiles = profiles.OrderBy(p => p.DateLabel);
+            }
             else if (Settings.RememberedRadioButton == "SortByName")
+            {
                 profiles = profiles.OrderBy(p => p.NameLabel);
+            }
             else if (Settings.RememberedRadioButton == "SortByNickName")
+            {
                 profiles = profiles.OrderBy(p => p.NickNameLabel);
+            }
 
             if (profiles.ToList().Count != 0)
             {
@@ -153,7 +148,7 @@ namespace ProfileBook.ViewModels
 
             if (result)
             {
-                ProfileRepositoryService.DeleteItem(model.Id);
+                await RepositoryService.DeleteAsync(model);
                 RefreshList();
             }
         }

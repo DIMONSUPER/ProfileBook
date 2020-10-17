@@ -2,11 +2,11 @@
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Prism.Navigation;
+using ProfileBook.Helpers;
 using ProfileBook.Models;
 using ProfileBook.Resources;
-using ProfileBook.Services.ProfileRepository;
+using ProfileBook.Services;
 using System;
-using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -17,39 +17,39 @@ namespace ProfileBook.ViewModels
         public ICommand SaveClickCommand => new Command(SaveClick);
         public ICommand ImageClickCommand => new Command(ImageClick);
 
-        private IProfileRepositoryService ProfileRepositoryService { get; }
+        private IRepositoryService RepositoryService { get; }
         private IUserDialogs UserDialogs { get; }
         public AddEditProfilePageViewModel(INavigationService navigationService,
-            IProfileRepositoryService profileRepositoryService,
+            IRepositoryService repositoryService,
             IUserDialogs userDialogs)
             : base(navigationService)
         {
-            ProfileRepositoryService = profileRepositoryService;
+            RepositoryService = repositoryService;
             UserDialogs = userDialogs;
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            if (parameters.TryGetValue(nameof(UserId), out int userId))
+            if (parameters.TryGetValue(nameof(DateLabel), out DateTime dateLabel)
+                && parameters.TryGetValue(nameof(ProfileImage), out string profileImage)
+                && parameters.TryGetValue("NickNameLabel", out string nickNameLabel)
+                && parameters.TryGetValue("NameLabel", out string nameLabel)
+                && parameters.TryGetValue(nameof(Description), out string description)
+                && parameters.TryGetValue("Id", out int id))
             {
-                UserId = userId;
-                ProfileImage = "pic_profile.png";
+                ProfileImage = profileImage;
+                NickName = nickNameLabel;
+                Name = nameLabel;
+                Description = description;
+                ProfileId = id;
+                DateLabel = dateLabel;
             }
-            else if (parameters.TryGetValue("DateLabel", out DateTime dateLabel))
+            else
             {
-                var myprofile = ProfileRepositoryService.GetItems().FirstOrDefault(p => p.DateLabel.Equals(dateLabel));
-
-                ProfileImage = myprofile.ProfileImage;
-                NickName = myprofile.NickNameLabel;
-                Name = myprofile.NameLabel;
-                Description = myprofile.Description;
-                UserId = myprofile.UserId;
-                ProfileId = myprofile.Id;
-                DateLabel = myprofile.DateLabel;
+                ProfileImage = "pic_profile.png";
             }
         }
 
-        public int UserId { get; set; }
         public int ProfileId { get; set; }
         public DateTime DateLabel { get; set; }
 
@@ -134,12 +134,15 @@ namespace ProfileBook.ViewModels
 
         private async void SaveClick()
         {
+            RepositoryService.InitTable<ProfileModel>();
             if (IsButtonEnabled())
             {
                 if (DateLabel == new DateTime())
+                {
                     DateLabel = DateTime.Now;
+                }
 
-                int result = ProfileRepositoryService.SaveItem(new ProfileModel
+                int result = await RepositoryService.InsertAsync(new ProfileModel
                 {
                     Id = ProfileId,
                     NameLabel = Name,
@@ -147,13 +150,12 @@ namespace ProfileBook.ViewModels
                     NickNameLabel = NickName,
                     ProfileImage = profileImage,
                     Description = Description,
-                    UserId = UserId
+                    UserId = Settings.RememberedUserId
                 });
 
                 if (result != -1)
                 {
                     var parameters = new NavigationParameters();
-                    parameters.Add("Id", UserId);
                     await NavigationService.GoBackAsync(parameters);
                 }
             }

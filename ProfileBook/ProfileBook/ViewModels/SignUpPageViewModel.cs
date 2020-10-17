@@ -2,7 +2,7 @@
 using Prism.Services;
 using ProfileBook.Models;
 using ProfileBook.Resources;
-using ProfileBook.Services.UserRepository;
+using ProfileBook.Services;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -13,14 +13,14 @@ namespace ProfileBook.ViewModels
     {
         public ICommand SignUpClickCommand => new Command(SignUpClick);
 
-        private IUserRepositoryService UserRepositoryService { get; }
+        private IRepositoryService RepositoryService { get; }
         private IPageDialogService PageDialogService { get; }
         public SignUpPageViewModel(INavigationService navigationService,
-            IUserRepositoryService userRepositoryService,
+            IRepositoryService repositoryService,
             IPageDialogService pageDialogService)
             : base(navigationService)
         {
-            UserRepositoryService = userRepositoryService;
+            RepositoryService = repositoryService;
             PageDialogService = pageDialogService;
         }
 
@@ -76,7 +76,7 @@ namespace ProfileBook.ViewModels
                 }
                 else if (ValidatePassword(UserPassword, ref message))
                 {
-                    int result = UserRepositoryService.SaveItem(new UserModel { Name = UserLogin, Password = UserPassword });
+                    int result = await RepositoryService.InsertAsync(new UserModel { Name = UserLogin, Password = UserPassword });
                     if (result != -1)
                     {
                         await PageDialogService.DisplayAlertAsync(AppResources.RegistrationSuccessfullTitle, AppResources.RegistrationSuccessfull, "OK");

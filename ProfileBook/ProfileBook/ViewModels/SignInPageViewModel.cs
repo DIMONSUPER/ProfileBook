@@ -1,9 +1,9 @@
 ﻿using Prism.Navigation;
 using Prism.Services;
 using ProfileBook.Helpers;
+using ProfileBook.Models;
 using ProfileBook.Resources;
-using ProfileBook.Services.UserRepository;
-using System.Linq;
+using ProfileBook.Services;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -14,15 +14,16 @@ namespace ProfileBook.ViewModels
         public ICommand LabelClickCommand => new Command(LabelClick);
         public ICommand SignInClickCommand => new Command(SignInClick);
 
-        private IUserRepositoryService UserRepositoryService { get; }
+        private IRepositoryService RepositoryService { get; }
         private IPageDialogService PageDialogService { get; }
         public SignInPageViewModel(INavigationService navigationService,
-            IUserRepositoryService userRepositoryService,
+            IRepositoryService repositoryService,
             IPageDialogService pageDialogService)
             : base(navigationService)
         {
-            UserRepositoryService = userRepositoryService;
+            RepositoryService = repositoryService;
             PageDialogService = pageDialogService;
+            RepositoryService.InitTable<UserModel>();
 
             if (!string.IsNullOrEmpty(Settings.RememberedLogin))
             {
@@ -75,21 +76,20 @@ namespace ProfileBook.ViewModels
 
         private async void SignInClick()
         {
-            var myquery = UserRepositoryService.GetItems().FirstOrDefault(u => u.Name.Equals(UserLogin) && u.Password.Equals(UserPassword));
+            var myquery = await RepositoryService.GetAsync<UserModel>((u => u.Name.Equals(UserLogin) && u.Password.Equals(UserPassword)));
 
             if (myquery != null)
             {
                 Settings.RememberedLogin = UserLogin;
+                Settings.RememberedUserId = myquery.Id;
 
-                var parameters = new NavigationParameters();
-                parameters.Add(nameof(myquery.Id), myquery.Id);
-
-                await NavigationService.NavigateAsync("/NavigationPage/MainListPage", parameters);
+                await NavigationService.NavigateAsync("/NavigationPage/MainListPage");
             }
             else
             {
                 await PageDialogService.DisplayAlertAsync(AppResources.InvalidLogin, AppResources.InvalidLogin, "OK");
                 Settings.RememberedLogin = string.Empty;
+                Settings.RememberedUserId = 0;
                 UserPassword = string.Empty;
             }
         }
